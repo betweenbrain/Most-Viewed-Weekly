@@ -21,9 +21,10 @@ class plgSystemVideohitsweekly extends JPlugin
 	{
 		parent::__construct($subject, $params);
 
-		$this->plugin =& JPluginHelper::getPlugin('system', 'videohitsweekly');
-		$this->params = new JParameter($this->plugin->params);
-
+		$this->app      = JFactory::getApplication();
+		$this->db       = JFactory::getDBO();
+		$this->plugin   =& JPluginHelper::getPlugin('system', 'videohitsweekly');
+		$this->params   = new JParameter($this->plugin->params);
 		$this->interval = (int) ($this->params->get('interval', 5) * 60);
 
 		// correct value if value is under the minimum
@@ -35,9 +36,9 @@ class plgSystemVideohitsweekly extends JPlugin
 
 	function onAfterRoute()
 	{
-		$app = JFactory::getApplication();
+		$this->app = JFactory::getApplication();
 
-		if ($app->isSite())
+		if ($this->app->isSite())
 		{
 			$now  = JFactory::getDate();
 			$now  = $now->toUnix();
@@ -50,67 +51,50 @@ class plgSystemVideohitsweekly extends JPlugin
 				$version = new JVersion();
 				define('J_VERSION', $version->getShortVersion());
 				jimport('joomla.registry.format');
-				$db = JFactory::getDbo();
+				$this->db = JFactory::getDbo();
 				$this->params->set('last_run', $now);
 
-				if (J_VERSION >= 1.6)
+				// Retrieve saved parameters from database
+				$query = ' SELECT params' .
+					' FROM #__plugins' .
+					' WHERE element = ' . $this->db->Quote('videohitsweekly') . '';
+				$this->db->setQuery($query);
+				$params = $this->db->loadResult();
+				// Check if last_run parameter has been previously saved.
+				if (preg_match('/last_run=/', $params))
 				{
-					$handler = JRegistryFormat::getInstance('json');
-					$params  = new JObject();
-					$params->set('interval', $this->params->get('interval', 5));
-					$params->set('last_run', $now);
-					$params = $handler->objectToString($params, array());
-					// Update plugin parameters in database
-					$query = 'UPDATE #__extensions' .
-						' SET params=' . $db->Quote($params) .
-						' WHERE element = ' . $db->Quote('videohitsweekly') .
-						' AND folder = ' . $db->Quote('system') .
-						' AND enabled >= 1' .
-						' AND type =' . $db->Quote('plugin') .
-						' AND state >= 0';
-					$db->setQuery($query);
-					$db->query();
-					/**
-					 * Do 1.6+ only stuff here
-					 *
-					 * */
+					// If it has been, update it.
+					$params = preg_replace('/last_run=([0-9]*)/', 'last_run=' . $now, $params);
 				}
 				else
 				{
-					// Retrieve saved parameters from database
-					$query = ' SELECT params' .
-						' FROM #__plugins' .
-						' WHERE element = ' . $db->Quote('videohitsweekly') . '';
-					$db->setQuery($query);
-					$params = $db->loadResult();
-					// Check if last_run parameter has been previously saved.
-					if (preg_match('/last_run=/', $params))
-					{
-						// If it has been, update it.
-						$params = preg_replace('/last_run=([0-9]*)/', 'last_run=' . $now, $params);
-					}
-					else
-					{
-						// Add last_run parameter to databse if it has not been recored before.
-						// TODO: Currently adding last_run to beginning of param string due to extra "\n" when using $params .=
-						$params = 'last_run=' . $now . "\n" . $params;
-					}
-					// Update plugin parameters in database
-					$query = 'UPDATE #__plugins' .
-						' SET params=' . $db->Quote($params) .
-						' WHERE element = ' . $db->Quote('videohitsweekly') .
-						' AND folder = ' . $db->Quote('system') .
-						' AND published >= 1';
-					$db->setQuery($query);
-					$db->query();
-					/**
-					 * Do 1.5 only stuff here
-					 *
-					 * */
+					// Add last_run parameter to databse if it has not been recored before.
+					// TODO: Currently adding last_run to beginning of param string due to extra "\n" when using $params .=
+					$params = 'last_run=' . $now . "\n" . $params;
 				}
+				// Update plugin parameters in database
+				$query = 'UPDATE #__plugins' .
+					' SET params=' . $this->db->Quote($params) .
+					' WHERE element = ' . $this->db->Quote('videohitsweekly') .
+					' AND folder = ' . $this->db->Quote('system') .
+					' AND published >= 1';
+				$this->db->setQuery($query);
+				$this->db->query();
 
-				// Do stuff for all versions here
-				die('Pseudocron executed!');
+				/**
+				 * Do stuff here
+				 * */
+				$query = "CREATE TABLE IF NOT EXISTS `jos_video_hits_weekly` (
+							`id`           INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+							`itemId`       INT(11)          NOT NULL,
+							`weeklyhits`   INT(11)          NOT NULL,
+							PRIMARY KEY (`id`)
+						)
+							ENGINE =MyISAM
+							AUTO_INCREMENT =0
+							DEFAULT CHARSET =utf8;";
+				$this->db->setQuery($query);
+				$this->db->query();
 			}
 		}
 
