@@ -112,9 +112,33 @@ class plgSystemVideohitsweekly extends JPlugin
 		$videoIdField    = htmlspecialchars($this->params->get('videoidfield'));
 		$videoData       = null;
 
-		$json               = file_get_contents('http://api.brightcove.com/services/library?command=find_video_by_ids&video_ids=' . implode(',', $this->getVideoIds()) . '&video_fields=ids&playsTrailingWeek&token=' . $brightcovetoken);
-		$results            = json_decode($json, true);
-		$videoData['views'] = $results['playsTotal'];
+		$serviceUrl = 'http://api.brightcove.com/services/library';
+
+		$parameters = array(
+			'command'      => 'find_videos_by_ids',
+			'video_ids'    => implode(',', $this->getVideoIds()),
+			'video_fields' => 'id,playsTrailingWeek',
+			'token'        => $brightcovetoken
+		);
+
+		$query = http_build_query($parameters);
+
+		//open connection
+		$curl = curl_init();
+
+		// Make a POST request to get bearer token
+		curl_setopt_array($curl, Array(
+			CURLOPT_URL            => $serviceUrl,
+			CURLOPT_POSTFIELDS     => $query,
+			CURLOPT_RETURNTRANSFER => 1,
+			CURLOPT_HEADER         => 0
+		));
+
+		//execute post
+		$response = curl_exec($curl);
+
+		echo '<pre>' . json_decode($response, true) . '</pre>';
+
 	}
 
 	private function getK2Items()
