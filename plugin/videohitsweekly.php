@@ -81,23 +81,74 @@ class plgSystemVideohitsweekly extends JPlugin
 				$this->db->setQuery($query);
 				$this->db->query();
 
-				/**
-				 * Do stuff here
-				 * */
-				$query = "CREATE TABLE IF NOT EXISTS `jos_video_hits_weekly` (
-							`id`           INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-							`itemId`       INT(11)          NOT NULL,
-							`weeklyHits`   INT(11)          NOT NULL,
-							PRIMARY KEY (`id`)
-						)
-							ENGINE =MyISAM
-							AUTO_INCREMENT =0
-							DEFAULT CHARSET =utf8;";
-				$this->db->setQuery($query);
-				$this->db->query();
+				$this->createTable();
+
 			}
 		}
 
 		return false;
 	}
+
+	private function createTable()
+	{
+		$query = "CREATE TABLE IF NOT EXISTS `jos_weekly_hits` (
+					`id`           INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+					`itemId`       INT(11)          NOT NULL,
+					`hits`         INT(11)          NOT NULL,
+					PRIMARY KEY (`id`)
+				)
+					ENGINE =MyISAM
+					AUTO_INCREMENT =0
+					DEFAULT CHARSET =utf8;";
+		$this->db->setQuery($query);
+		$this->db->query();
+	}
+
+	private function getBrightcoveWeeklyHits()
+	{
+
+		$brightcovetoken = htmlspecialchars($this->params->get('brightcovetoken'));
+		$providerfield   = htmlspecialchars($this->params->get('providerfield'));
+		$videoIdField    = htmlspecialchars($this->params->get('videoidfield'));
+		$videoData       = null;
+
+		$json               = file_get_contents('http://api.brightcove.com/services/library?command=find_video_by_ids&video_ids=' . implode(',', $this->getVideoIds()) . '&video_fields=ids&playsTrailingWeek&token=' . $brightcovetoken);
+		$results            = json_decode($json, true);
+		$videoData['views'] = $results['playsTotal'];
+	}
+
+	private function getK2Items()
+	{
+		$k2categories = htmlspecialchars($this->params->get('k2category'));
+
+		$query = "SELECT plugins
+		 FROM #__k2_items
+		 WHERE catid IN (" . implode(',', $k2categories) . ")
+		 AND published = 1
+		 AND trash = 0";
+		$this->db->setQuery($query);
+		$items = $this->db->loadAssocList();
+
+		return $items;
+	}
+
+	private function getVideoIds()
+	{
+		$items = $this->getK2Items();
+
+		foreach ($items as $item)
+		{
+
+			$params = parse_ini_string($item['plugins']);
+
+			if ($params['video_datavideoProvider'] == 'brightcove')
+			{
+				$videoIds[] = $params['video_datavideoID'];
+			}
+		}
+
+		return $videoIds;
+
+	}
+
 }
