@@ -147,7 +147,7 @@ class plgSystemVideohitsweekly extends JPlugin
 
 		$query = "SELECT plugins
 		 FROM #__k2_items
-		 WHERE catid IN (" . implode(',', $k2categories) . ")
+		 WHERE catid IN ($k2categories)
 		 AND published = 1
 		 AND trash = 0";
 		$this->db->setQuery($query);
