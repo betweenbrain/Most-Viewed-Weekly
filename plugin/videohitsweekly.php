@@ -45,8 +45,8 @@ class plgSystemVideohitsweekly extends JPlugin
 			$last = $this->params->get('last_run');
 			$diff = $now - $last;
 
-			if ($diff > $this->interval)
-			{
+			//if ($diff > $this->interval)
+			//{
 
 				$version = new JVersion();
 				define('J_VERSION', $version->getShortVersion());
@@ -83,7 +83,9 @@ class plgSystemVideohitsweekly extends JPlugin
 
 				$this->createTable();
 
-			}
+				$this->getBrightcoveWeeklyHits();
+
+			//}
 		}
 
 		return false;
