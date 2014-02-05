@@ -21,7 +21,7 @@ class modMostviewedweeklyHelper
 
 	public function getItems()
 	{
-		$query = 'SELECT k2.id as id, k2.title as title, k2.plugins as plugins, weekly.hits as hits ' .
+		$query = 'SELECT k2.id as id, k2.title as title, k2.alias as alias, k2.catid as catid, k2.plugins as plugins, weekly.hits as hits ' .
 			' FROM ' . $this->db->nameQuote('#__k2_items') . ' as k2' .
 			' LEFT JOIN ' . $this->db->nameQuote('#__weekly_hits') . ' as weekly' .
 			' ON weekly.itemId = k2.id' .
