@@ -150,13 +150,13 @@ class plgSystemVideohitsweekly extends JPlugin
 	{
 		$k2categories = htmlspecialchars($this->params->get('k2category'));
 
-		$query = "SELECT plugins
+		$query = "SELECT id, plugins
 		 FROM #__k2_items
 		 WHERE catid IN ($k2categories)
 		 AND published = 1
 		 AND trash = 0";
 		$this->db->setQuery($query);
-		$items = $this->db->loadAssocList();
+		$items = $this->db->loadAssocList('id');
 
 		return $items;
 	}
