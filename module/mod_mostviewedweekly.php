@@ -14,4 +14,4 @@ require_once __DIR__ . '/helper.php';
 $helper = new modMostviewedweeklyHelper($params);
 $items = $helper->getItems();
 
-require(JModuleHelper::getLayoutPath('mod_mostviewedweeklyHelper'));
+require(JModuleHelper::getLayoutPath('mod_mostviewedweekly'));
