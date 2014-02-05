@@ -15,12 +15,15 @@ class modMostviewedweeklyHelper
 {
 	public function __construct($params)
 	{
-		$this->app = JFactory::getApplication();
-		$this->db  = JFactory::getDbo();
+		$this->app    = JFactory::getApplication();
+		$this->db     = JFactory::getDbo();
+		$this->params = $params;
 	}
 
 	public function getItems()
 	{
+		$limit = $this->params->get('limit');
+
 		$query = 'SELECT k2.id as id, k2.title as title, k2.alias as alias, k2.catid as catid, k2.plugins as plugins, weekly.hits as hits ' .
 			' FROM ' . $this->db->nameQuote('#__k2_items') . ' as k2' .
 			' LEFT JOIN ' . $this->db->nameQuote('#__weekly_hits') . ' as weekly' .
@@ -28,7 +31,7 @@ class modMostviewedweeklyHelper
 			' WHERE k2.published = 1' .
 			' AND k2.trash = 0' .
 			' ORDER BY hits DESC' .
-			' LIMIT 5';
+			' LIMIT ' . $limit;
 
 		$this->db->setQuery($query);
 		$items = $this->db->loadObjectList();

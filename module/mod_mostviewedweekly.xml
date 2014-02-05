@@ -21,4 +21,20 @@
 		<language tag="en-GB">language/en-GB/en-GB.mod_mostviewedweekly.ini</language>
 	</languages>
 
+	<params>
+		<param name="limit"
+		       type="list"
+		       default="9"
+		       label="MOD_MOST_VIEWED_WEEKLY_DESC_LIMIT_LABEL"
+		       description="MOD_MOST_VIEWED_WEEKLY_DESC_LIMIT_DESC">
+			<option value="3">3</option>
+			<option value="9">9</option>
+			<option value="15">15</option>
+			<option value="21">21</option>
+			<option value="27">27</option>
+			<option value="33">33</option>
+			<option value="39">39</option>
+		</param>
+	</params>
+
 </install>
