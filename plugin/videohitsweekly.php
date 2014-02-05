@@ -165,14 +165,14 @@ class plgSystemVideohitsweekly extends JPlugin
 	{
 		$items = $this->getK2Items();
 
-		foreach ($items as $item)
+		foreach ($items as $id => $plugins)
 		{
 
-			$params = parse_ini_string($item['plugins']);
+			$params = parse_ini_string($plugins['plugins']);
 
 			if ($params['video_datavideoProvider'] == 'brightcove')
 			{
-				$videoIds[] = $params['video_datavideoID'];
+				$videoIds[$id] = $params['video_datavideoID'];
 			}
 		}
 
