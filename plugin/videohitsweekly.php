@@ -111,7 +111,6 @@ class plgSystemVideohitsweekly extends JPlugin
 	{
 		foreach ($this->getVideoIds() as $id => $videoId)
 		{
-
 			$brightcovetoken = htmlspecialchars($this->params->get('brightcovetoken'));
 			$providerfield   = htmlspecialchars($this->params->get('providerfield'));
 			$videoIdField    = htmlspecialchars($this->params->get('videoidfield'));
@@ -187,7 +186,5 @@ class plgSystemVideohitsweekly extends JPlugin
 		}
 
 		return $videoIds;
-
 	}
-
 }
