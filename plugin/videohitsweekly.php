@@ -95,10 +95,10 @@ class plgSystemVideohitsweekly extends JPlugin
 	{
 		$query = "CREATE TABLE IF NOT EXISTS `jos_weekly_hits` (
 					`id`           INT(11)     UNSIGNED NOT NULL AUTO_INCREMENT,
-					`itemId`       varchar(11)          NOT NULL,
+					`itemId`       INT(11)              NOT NULL,
 					`hits`         INT(11)              NOT NULL,
 					PRIMARY KEY (`id`),
-					UNIQUE KEY (`itemId`(11))
+					UNIQUE INDEX (`itemId`)
 				)
 					ENGINE =MyISAM
 					AUTO_INCREMENT =0
