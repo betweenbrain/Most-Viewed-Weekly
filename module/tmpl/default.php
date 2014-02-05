@@ -9,7 +9,7 @@
  * License    GNU GPL v3 or later
  */
 
-include(JPATH_SITE . '/components/com_k2/helpers/route.php');
+include_once(JPATH_SITE . '/components/com_k2/helpers/route.php');
 
 if (count($items)): ?>
 	<div id="looper<?php echo $module->id; ?>" data-looper="go" data-interval="false" class="looper side slide featured video-slider<?php echo $moduleclass_sfx ?>">
