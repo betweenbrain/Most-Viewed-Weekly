@@ -108,42 +108,51 @@ class plgSystemVideohitsweekly extends JPlugin
 
 	private function getBrightcoveWeeklyHits()
 	{
+		foreach ($this->getVideoIds() as $id => $videoId)
+		{
 
-		$brightcovetoken = htmlspecialchars($this->params->get('brightcovetoken'));
-		$providerfield   = htmlspecialchars($this->params->get('providerfield'));
-		$videoIdField    = htmlspecialchars($this->params->get('videoidfield'));
-		$videoData       = null;
+			$brightcovetoken = htmlspecialchars($this->params->get('brightcovetoken'));
+			$providerfield   = htmlspecialchars($this->params->get('providerfield'));
+			$videoIdField    = htmlspecialchars($this->params->get('videoidfield'));
+			$videoData       = null;
 
-		$serviceUrl = 'http://api.brightcove.com/services/library';
+			$serviceUrl = 'http://api.brightcove.com/services/library';
 
-		$parameters = array(
-			'command'      => 'find_videos_by_ids',
-			'video_ids'    => implode(',', $this->getVideoIds()),
-			'video_fields' => 'id,playsTrailingWeek',
-			'token'        => $brightcovetoken
-		);
+			$parameters = array(
+				'command'      => 'find_video_by_id',
+				'video_id'     => $videoId,
+				'video_fields' => 'playsTrailingWeek',
+				'token'        => $brightcovetoken
+			);
 
-		$query = http_build_query($parameters);
+			$query = http_build_query($parameters);
 
-		//open connection
-		$curl = curl_init();
+			//open connection
+			$curl = curl_init();
 
-		// Make a POST request to get bearer token
-		curl_setopt_array($curl, Array(
-			CURLOPT_URL            => $serviceUrl,
-			CURLOPT_POSTFIELDS     => $query,
-			CURLOPT_RETURNTRANSFER => 1,
-			CURLOPT_HEADER         => 0
-		));
+			// Make a POST request to get bearer token
+			curl_setopt_array($curl, Array(
+				CURLOPT_URL            => $serviceUrl,
+				CURLOPT_POSTFIELDS     => $query,
+				CURLOPT_RETURNTRANSFER => 1,
+				CURLOPT_HEADER         => 0
+			));
 
-		//execute post
-		$response = curl_exec($curl);
+			//execute post
+			$response = curl_exec($curl);
+			$response = json_decode($response);
 
-		//close connection
-		curl_close($curl);
+			//close connection
+			curl_close($curl);
 
-		echo '<pre>' . json_decode($response, true) . '</pre>';
-
+			$query = 'INSERT INTO' . $this->db->nameQuote('#__weekly_hits') .
+				'(' . $this->db->nameQuote('itemId') . ',' . $this->db->nameQuote('hits') . ')' .
+				' VALUES (' . $this->db->Quote($id) . ',' . $this->db->Quote($response->playsTrailingWeek) . ')' .
+				' ON DUPLICATE KEY UPDATE ' .
+				$this->db->nameQuote('hits') . '=VALUES(' . $this->db->nameQuote('hits') . ')';
+			$this->db->setQuery($query);
+			$this->db->query();
+		}
 	}
 
 	private function getK2Items()
