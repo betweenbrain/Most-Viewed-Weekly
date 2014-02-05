@@ -11,21 +11,22 @@
 	<authorEmail></authorEmail>
 	<authorUrl>http://www.betweenbrain.com</authorUrl>
 	<version>1.0</version>
-	<description>
+	<description></description>
 
-	</description>
 	<files>
 		<filename plugin="videohitsweekly">videohitsweekly.php</filename>
 	</files>
+
 	<languages>
-		<language tag="en-GB">languages/en-GB/en-GB.plg_system_video_hits_weekly.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_system_videohitsweekly.ini</language>
 	</languages>
+
 	<params>
 		<param name="interval"
 		       type="list"
 		       default="5"
-		       label="PLG_K2_VIDEO_HITS_CRON_INTERVAL_LABEL"
-		       description="PLG_K2_VIDEO_HITS_CRON_INTERVAL_DESC">
+		       label="PLG_VIDEO_HITS_WEEKLY_CRON_INTERVAL_LABEL"
+		       description="PLG_VIDEO_HITS_WEEKLY_CRON_INTERVAL_DESC">
 			<option value="1">1M</option>
 			<option value="2">2M</option>
 			<option value="3">3M</option>
