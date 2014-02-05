@@ -45,47 +45,47 @@ class plgSystemVideohitsweekly extends JPlugin
 			$last = $this->params->get('last_run');
 			$diff = $now - $last;
 
-			//if ($diff > $this->interval)
-			//{
-
-			$version = new JVersion();
-			define('J_VERSION', $version->getShortVersion());
-			jimport('joomla.registry.format');
-			$this->db = JFactory::getDbo();
-			$this->params->set('last_run', $now);
-
-			// Retrieve saved parameters from database
-			$query = ' SELECT params' .
-				' FROM #__plugins' .
-				' WHERE element = ' . $this->db->Quote('videohitsweekly') . '';
-			$this->db->setQuery($query);
-			$params = $this->db->loadResult();
-			// Check if last_run parameter has been previously saved.
-			if (preg_match('/last_run=/', $params))
+			if ($diff > $this->interval)
 			{
-				// If it has been, update it.
-				$params = preg_replace('/last_run=([0-9]*)/', 'last_run=' . $now, $params);
+
+				$version = new JVersion();
+				define('J_VERSION', $version->getShortVersion());
+				jimport('joomla.registry.format');
+				$this->db = JFactory::getDbo();
+				$this->params->set('last_run', $now);
+
+				// Retrieve saved parameters from database
+				$query = ' SELECT params' .
+					' FROM #__plugins' .
+					' WHERE element = ' . $this->db->Quote('videohitsweekly') . '';
+				$this->db->setQuery($query);
+				$params = $this->db->loadResult();
+				// Check if last_run parameter has been previously saved.
+				if (preg_match('/last_run=/', $params))
+				{
+					// If it has been, update it.
+					$params = preg_replace('/last_run=([0-9]*)/', 'last_run=' . $now, $params);
+				}
+				else
+				{
+					// Add last_run parameter to databse if it has not been recored before.
+					// TODO: Currently adding last_run to beginning of param string due to extra "\n" when using $params .=
+					$params = 'last_run=' . $now . "\n" . $params;
+				}
+				// Update plugin parameters in database
+				$query = 'UPDATE #__plugins' .
+					' SET params=' . $this->db->Quote($params) .
+					' WHERE element = ' . $this->db->Quote('videohitsweekly') .
+					' AND folder = ' . $this->db->Quote('system') .
+					' AND published >= 1';
+				$this->db->setQuery($query);
+				$this->db->query();
+
+				$this->createTable();
+
+				$this->getBrightcoveWeeklyHits();
+
 			}
-			else
-			{
-				// Add last_run parameter to databse if it has not been recored before.
-				// TODO: Currently adding last_run to beginning of param string due to extra "\n" when using $params .=
-				$params = 'last_run=' . $now . "\n" . $params;
-			}
-			// Update plugin parameters in database
-			$query = 'UPDATE #__plugins' .
-				' SET params=' . $this->db->Quote($params) .
-				' WHERE element = ' . $this->db->Quote('videohitsweekly') .
-				' AND folder = ' . $this->db->Quote('system') .
-				' AND published >= 1';
-			$this->db->setQuery($query);
-			$this->db->query();
-
-			$this->createTable();
-
-			$this->getBrightcoveWeeklyHits();
-
-			//}
 		}
 
 		return false;
