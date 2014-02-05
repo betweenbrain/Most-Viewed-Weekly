@@ -9,6 +9,8 @@
  * License    GNU GPL v3 or later
  */
 
+include(JPATH_SITE . '/components/com_k2/helpers/route.php');
+
 if (count($items)): ?>
 	<div id="looper<?php echo $module->id; ?>" data-looper="go" data-interval="false" class="looper side slide featured video-slider<?php echo $moduleclass_sfx ?>">
 		<?php if (count($items) > 3) : ?>
@@ -38,6 +40,21 @@ if (count($items)): ?>
 			{
 				$item->shortTitle = $item->title;
 			}?>
+			<?php
+			/**
+			 * Parse K2 plugins data for each field
+			 */
+			$plugins = parse_ini_string($item->plugins);
+			$item->videoImage = $plugins['video_datavideoImageUrl'];
+			$item->videoDuration = $plugins['video_datavideoDuration'];
+			?>
+			<?php
+			/**
+			 * Get item link
+			 */
+			$item->link = K2HelperRoute::getItemRoute($item->id . ':' . urlencode($item->alias), $item->catid);
+			$item->link = urldecode(JRoute::_($item->link));
+			?>
 			<?php switch ($key)
 			{
 				case 0 :
