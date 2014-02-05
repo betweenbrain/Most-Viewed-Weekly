@@ -17,4 +17,77 @@
 	<files>
 		<filename plugin="videohitsweekly">videohitsweekly.php</filename>
 	</files>
+	<languages>
+		<language tag="en-GB">languages/en-GB/en-GB.plg_system_video_hits_weekly.ini</language>
+	</languages>
+	<params>
+		<param name="interval"
+		       type="list"
+		       default="5"
+		       label="PLG_K2_VIDEO_HITS_CRON_INTERVAL_LABEL"
+		       description="PLG_K2_VIDEO_HITS_CRON_INTERVAL_DESC">
+			<option value="1">1M</option>
+			<option value="2">2M</option>
+			<option value="3">3M</option>
+			<option value="4">4M</option>
+			<option value="5">5M</option>
+			<option value="10">10M</option>
+			<option value="15">15M</option>
+			<option value="20">20M</option>
+			<option value="25">25M</option>
+			<option value="30">30M</option>
+			<option value="45">45M</option>
+			<option value="60">1H</option>
+			<option value="90">90M</option>
+			<option value="120">2H</option>
+			<option value="240">4H</option>
+			<option value="360">6H</option>
+			<option value="480">8H</option>
+			<option value="600">10H</option>
+			<option value="720">12H</option>
+			<option value="840">14H</option>
+			<option value="960">16H</option>
+			<option value="1080">18H</option>
+			<option value="1200">20H</option>
+			<option value="1320">22H</option>
+			<option value="1440">1D</option>
+		</param>
+		<param name="k2category"
+		       type="text"
+		       default=""
+		       label="PLG_VIDEO_HITS_WEEKLY_K2CATEGORY_LABEL"
+		       description="PLG_VIDEO_HITS_WEEKLY_K2CATEGORY_DESC" />
+		<param name="providerfield"
+		       type="text"
+		       default=""
+		       label="PLG_VIDEO_HITS_WEEKLY_PROVIDER_LABEL"
+		       description="PLG_VIDEO_HITS_WEEKLY_PROVIDER_DESC" />
+		<param name="videoidfield"
+		       type="text"
+		       default=""
+		       label="PLG_VIDEO_HITS_WEEKLY_VIDEO_ID_LABEL"
+		       description="PLG_VIDEO_HITS_WEEKLY_VIDEO_ID_DESC" />
+		<param name="youtube"
+		       type="radio"
+		       default="0"
+		       label="PLG_VIDEO_HITS_WEEKLY_YOUTUBE_LABEL"
+		       description="PLG_VIDEO_HITS_WEEKLY_YOUTUBE_DESC">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="brightcove"
+		       type="radio"
+		       default="0"
+		       label="PLG_VIDEO_HITS_WEEKLY_BRIGHTCOVE_LABEL"
+		       description="PLG_VIDEO_HITS_WEEKLY_BRIGHTCOVE_DESC">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="brightcovetoken"
+		       type="text"
+		       default=""
+		       label="PLG_VIDEO_HITS_WEEKLY_BRIGHTCOVE_TOKEN_LABEL"
+		       description="PLG_VIDEO_HITS_WEEKLY_BRIGHTCOVE_TOKEN_DESC" />
+	</params>
+
 </install>
