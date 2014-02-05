@@ -21,11 +21,14 @@ class modMostviewedweeklyHelper
 
 	public function getItems()
 	{
-		$query = 'SELECT *
-					FROM ' . $this->db->nameQuote('#__video_hits_weekly') . '
-					WHERE published = 1
-					ORDER BY hits DESC,
-					LIMIT 5';
+		$query = 'SELECT k2.id as id, k2.title as title, k2.introtext as introtext, k2.extra_fields as extra_fields, weekly.hits as hits ' .
+			' FROM ' . $this->db->nameQuote('#__k2_items') . ' as k2' .
+			' LEFT JOIN ' . $this->db->nameQuote('#__weekly_hits') . ' as weekly' .
+			' ON weekly.itemId = k2.id' .
+			' WHERE k2.published = 1' .
+			' AND k2.trash = 0' .
+			' ORDER BY hits DESC' .
+			' LIMIT 5';
 
 		$this->db->setQuery($query);
 		$items = $this->db->loadObjectList();
