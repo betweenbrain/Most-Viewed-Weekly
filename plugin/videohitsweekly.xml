@@ -96,7 +96,7 @@
 		       default=""
 		       label="PLG_VIDEO_HITS_WEEKLY_GOOGLE_API_KEY_LABEL"
 		       description="PLG_VIDEO_HITS_WEEKLY_GOOGLE_API_KEY_DESC" />
-		<param name="googleClilentId"
+		<param name="googleClientId"
 		       type="text"
 		       default=""
 		       label="PLG_VIDEO_HITS_WEEKLY_GOOGLE_CLIENT_IDLABEL"
