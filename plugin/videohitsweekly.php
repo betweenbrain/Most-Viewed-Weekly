@@ -170,21 +170,33 @@ class plgSystemVideohitsweekly extends JPlugin
 		return $items;
 	}
 
-	private function getVideoIds()
+	private function getVideoIds($provider = 'brightcove')
 	{
 		$items = $this->getK2Items();
 
 		foreach ($items as $id => $plugins)
 		{
-
 			$params = parse_ini_string($plugins['plugins']);
 
-			if ($params['video_datavideoProvider'] == 'brightcove')
+			switch ($params['video_datavideoProvider'])
 			{
-				$videoIds[$id] = $params['video_datavideoID'];
+				case('brightcove'):
+					$brightcoveVideoIds[$id] = $params['video_datavideoID'];
+					break;
+				case('youtube'):
+					$youtubeVideoIds[$id] = $params['video_datavideoID'];
+					break;
 			}
 		}
 
-		return $videoIds;
+		switch ($provider)
+		{
+			case('brightcove'):
+				return $brightcoveVideoIds;
+				break;
+			case('youtube'):
+				return $youtubeVideoIds;
+				break;
+		}
 	}
 }
