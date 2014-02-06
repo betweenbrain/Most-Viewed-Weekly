@@ -15,13 +15,14 @@
 
 	<files>
 		<filename plugin="videohitsweekly">videohitsweekly.php</filename>
+		<folder>elements</folder>
 	</files>
 
 	<languages>
 		<language tag="en-GB">language/en-GB/en-GB.plg_system_videohitsweekly.ini</language>
 	</languages>
 
-	<params>
+	<params addpath="/plugins/system/elements">
 		<param name="interval"
 		       type="list"
 		       default="5"
@@ -89,6 +90,22 @@
 		       default=""
 		       label="PLG_VIDEO_HITS_WEEKLY_BRIGHTCOVE_TOKEN_LABEL"
 		       description="PLG_VIDEO_HITS_WEEKLY_BRIGHTCOVE_TOKEN_DESC" />
+		<param type="googleoauth" />
+		<param name="googleApiKey"
+		       type="text"
+		       default=""
+		       label="PLG_VIDEO_HITS_WEEKLY_GOOGLE_API_KEY_LABEL"
+		       description="PLG_VIDEO_HITS_WEEKLY_GOOGLE_API_KEY_DESC" />
+		<param name="googleClilentId"
+		       type="text"
+		       default=""
+		       label="PLG_VIDEO_HITS_WEEKLY_GOOGLE_CLIENT_IDLABEL"
+		       description="PLG_VIDEO_HITS_WEEKLY_GOOGLE_CLIENT_IDDESC" />
+		<param name="googleClientSecret"
+		       type="text"
+		       default=""
+		       label="PLG_VIDEO_HITS_WEEKLY_GOOGLE_CLIENT_SECRETLABEL"
+		       description="PLG_VIDEO_HITS_WEEKLY_GOOGLE_CLIENT_SECRETDESC" />
 	</params>
 
 </install>
