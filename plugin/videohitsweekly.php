@@ -84,6 +84,7 @@ class plgSystemVideohitsweekly extends JPlugin
 				$this->createTable();
 
 				$this->getBrightcoveWeeklyHits();
+				$this->getYoutubeWeeklyHits();
 
 			}
 		}
@@ -152,6 +153,14 @@ class plgSystemVideohitsweekly extends JPlugin
 				$this->db->nameQuote('hits') . '=VALUES(' . $this->db->nameQuote('hits') . ')';
 			$this->db->setQuery($query);
 			$this->db->query();
+		}
+	}
+
+	private function getYoutubeWeeklyHits()
+	{
+		foreach ($this->getVideoIds('youtube') as $id => $videoId)
+		{
+
 		}
 	}
 
