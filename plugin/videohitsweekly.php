@@ -82,7 +82,6 @@ class plgSystemVideohitsweekly extends JPlugin
 				$this->db->query();
 
 				$this->createTable();
-
 				$this->getBrightcoveWeeklyHits();
 				$this->getYoutubeWeeklyHits();
 
@@ -158,9 +157,58 @@ class plgSystemVideohitsweekly extends JPlugin
 
 	private function getYoutubeWeeklyHits()
 	{
+		$this->accessToken = JPATH_SITE . '/cache/plg_googleoauth/access.token';
+
+		// Fetch parameters via database query
+		$this->db = JFactory::getDBO();
+		$sql      = 'SELECT ' . $this->db->nameQuote('params') .
+			' FROM ' . $this->db->nameQuote('#__plugins') .
+			' WHERE ' . $this->db->nameQuote('element') . ' = ' . $this->db->quote('googleoauth');
+		$this->db->setQuery($sql);
+		$params = $this->db->loadResult();
+		$params = parse_ini_string($params);
+
+		foreach ($params as $name => $value)
+		{
+			$this->{$name} = $value;
+		}
+
 		foreach ($this->getVideoIds('youtube') as $id => $videoId)
 		{
+			if (file_exists($this->accessToken))
+			{
+				$parameters = array(
+					'ids'        => 'channel==UCiAY9AsPrNPa8T4sMP23_vg',
+					'start-date' => date('Y-m-d', time() - (7 * 24 * 60 * 60)),
+					'end-date'   => date('Y-m-d', time() - (1 * 24 * 60 * 60)),
+					'metrics'    => 'views',
+					'filters'    => 'video==' . $videoId,
+					'key'        => $this->googleApiKey
+				);
 
+				$url   = 'https://www.googleapis.com/youtube/analytics/v1/reports?';
+				$query = http_build_query($parameters);
+				$curl  = curl_init();
+
+				curl_setopt_array($curl, Array(
+					CURLOPT_HTTPHEADER     => array('Authorization:  Bearer ' . file_get_contents($this->accessToken)),
+					CURLOPT_URL            => $url . $query,
+					CURLOPT_RETURNTRANSFER => 1
+				));
+
+				$response = curl_exec($curl);
+				$response = json_decode($response);
+
+				$hits = $response->rows[0][0];
+
+				$query = 'INSERT INTO' . $this->db->nameQuote('#__weekly_hits') .
+					'(' . $this->db->nameQuote('itemId') . ',' . $this->db->nameQuote('hits') . ')' .
+					' VALUES (' . $this->db->Quote($id) . ',' . $this->db->Quote($hits) . ')' .
+					' ON DUPLICATE KEY UPDATE ' .
+					$this->db->nameQuote('hits') . '=VALUES(' . $this->db->nameQuote('hits') . ')';
+				$this->db->setQuery($query);
+				$this->db->query();
+			}
 		}
 	}
 
