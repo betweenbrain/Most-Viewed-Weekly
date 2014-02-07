@@ -158,8 +158,9 @@ class plgSystemVideohitsweekly extends JPlugin
 	private function getYoutubeWeeklyHits()
 	{
 		$this->accessToken = JPATH_SITE . '/cache/plg_googleoauth/access.token';
+		$youtubeChannel    = htmlspecialchars($this->params->get('youtubeChannel'));
 
-		// Fetch parameters via database query
+		// Fetch plg_googeoauth parameters via database query
 		$this->db = JFactory::getDBO();
 		$sql      = 'SELECT ' . $this->db->nameQuote('params') .
 			' FROM ' . $this->db->nameQuote('#__plugins') .
@@ -178,7 +179,7 @@ class plgSystemVideohitsweekly extends JPlugin
 			if (file_exists($this->accessToken))
 			{
 				$parameters = array(
-					'ids'        => 'channel==UCiAY9AsPrNPa8T4sMP23_vg',
+					'ids'        => 'channel==' . $youtubeChannel,
 					'start-date' => date('Y-m-d', time() - (7 * 24 * 60 * 60)),
 					'end-date'   => date('Y-m-d', time() - (1 * 24 * 60 * 60)),
 					'metrics'    => 'views',

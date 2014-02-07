@@ -89,6 +89,11 @@
 		       default=""
 		       label="PLG_VIDEO_HITS_WEEKLY_BRIGHTCOVE_TOKEN_LABEL"
 		       description="PLG_VIDEO_HITS_WEEKLY_BRIGHTCOVE_TOKEN_DESC" />
+		<param name="youtubeChannel"
+		       type="text"
+		       default=""
+		       label="PLG_VIDEO_HITS_WEEKLY_YOUTUBE_CHANNEL_LABEL"
+		       description="PLG_VIDEO_HITS_WEEKLY_YOUTUBE_CHANNEL_DESC" />
 	</params>
 
 </install>
