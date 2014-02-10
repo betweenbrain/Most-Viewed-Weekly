@@ -33,7 +33,7 @@ class plgSystemVideohitsweekly extends JPlugin
 			$now  = JFactory::getDate()->toUnix();
 			$last = $this->params->get('last_run');
 
-			if ($now - $last > $this->interval)
+			if (($now - $last) > $this->interval)
 			{
 				// Retrieve saved parameters from database
 				$query = ' SELECT params' .
