@@ -40,12 +40,10 @@ class plgSystemVideohitsweekly extends JPlugin
 					' FROM #__plugins' .
 					' WHERE element = ' . $this->db->Quote('videohitsweekly') . '';
 				$this->db->setQuery($query);
-				$params = $this->db->loadResult();
-
-				$params             = parse_ini_string($params);
+				$params             = parse_ini_string($this->db->loadResult());
 				$params['last_run'] = $now;
-
-				$paramsIni = null;
+				$paramsIni          = null;
+				
 				foreach ($params as $key => $value)
 				{
 					$paramsIni .= $key . '=' . $value . "\n";
