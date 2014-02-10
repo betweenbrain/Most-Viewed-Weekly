@@ -156,19 +156,9 @@ class plgSystemVideohitsweekly extends JPlugin
 		$youtubeChannel    = htmlspecialchars($this->params->get('youtubeChannel'));
 		$url               = 'https://www.googleapis.com/youtube/analytics/v1/reports?';
 
-		// Fetch plg_googeoauth parameters via database query
-		$this->db = JFactory::getDBO();
-		$sql      = 'SELECT ' . $this->db->nameQuote('params') .
-			' FROM ' . $this->db->nameQuote('#__plugins') .
-			' WHERE ' . $this->db->nameQuote('element') . ' = ' . $this->db->quote('googleoauth');
-		$this->db->setQuery($sql);
-		$params = $this->db->loadResult();
-		$params = parse_ini_string($params);
-
-		foreach ($params as $name => $value)
-		{
-			$this->{$name} = $value;
-		}
+		$googleoauthplugin =& JPluginHelper::getPlugin('system', 'googleoauth');
+		$googleoauthparams = new JParameter($googleoauthplugin->params);
+		$googleApiKey      = $googleoauthparams->get('googleapikey');
 
 		if (file_exists($this->accessToken))
 		{
@@ -180,7 +170,7 @@ class plgSystemVideohitsweekly extends JPlugin
 					'end-date'   => date('Y-m-d', time() - (1 * 24 * 60 * 60)),
 					'metrics'    => 'views',
 					'filters'    => 'video==' . $videoId,
-					'key'        => $this->googleApiKey
+					'key'        => $googleApiKey
 				);
 
 				$curlOptions = array(
