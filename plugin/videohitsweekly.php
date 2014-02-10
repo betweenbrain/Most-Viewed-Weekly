@@ -95,6 +95,17 @@ class plgSystemVideohitsweekly extends JPlugin
 		$this->db->query();
 	}
 
+	private function insertHit($id, $value)
+	{
+		$query = 'INSERT INTO' . $this->db->nameQuote('#__weekly_hits') .
+			'(' . $this->db->nameQuote('itemId') . ',' . $this->db->nameQuote('hits') . ')' .
+			' VALUES (' . $this->db->Quote($id) . ',' . $this->db->Quote($value) . ')' .
+			' ON DUPLICATE KEY UPDATE ' .
+			$this->db->nameQuote('hits') . '=VALUES(' . $this->db->nameQuote('hits') . ')';
+		$this->db->setQuery($query);
+		$this->db->query();
+	}
+
 	private function getBrightcoveWeeklyHits()
 	{
 		foreach ($this->getVideoIds() as $id => $videoId)
@@ -130,13 +141,7 @@ class plgSystemVideohitsweekly extends JPlugin
 			//close connection
 			curl_close($curl);
 
-			$query = 'INSERT INTO' . $this->db->nameQuote('#__weekly_hits') .
-				'(' . $this->db->nameQuote('itemId') . ',' . $this->db->nameQuote('hits') . ')' .
-				' VALUES (' . $this->db->Quote($id) . ',' . $this->db->Quote($response->playsTrailingWeek) . ')' .
-				' ON DUPLICATE KEY UPDATE ' .
-				$this->db->nameQuote('hits') . '=VALUES(' . $this->db->nameQuote('hits') . ')';
-			$this->db->setQuery($query);
-			$this->db->query();
+			$this->insertHit($id, $response->playsTrailingWeek);
 		}
 	}
 
@@ -185,15 +190,8 @@ class plgSystemVideohitsweekly extends JPlugin
 				$response = curl_exec($curl);
 				$response = json_decode($response);
 
-				$hits = $response->rows[0][0];
+				$this->insertHit($id, $response->rows[0][0]);
 
-				$query = 'INSERT INTO' . $this->db->nameQuote('#__weekly_hits') .
-					'(' . $this->db->nameQuote('itemId') . ',' . $this->db->nameQuote('hits') . ')' .
-					' VALUES (' . $this->db->Quote($id) . ',' . $this->db->Quote($hits) . ')' .
-					' ON DUPLICATE KEY UPDATE ' .
-					$this->db->nameQuote('hits') . '=VALUES(' . $this->db->nameQuote('hits') . ')';
-				$this->db->setQuery($query);
-				$this->db->query();
 			}
 		}
 	}
