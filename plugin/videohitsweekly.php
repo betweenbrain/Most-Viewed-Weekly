@@ -108,12 +108,11 @@ class plgSystemVideohitsweekly extends JPlugin
 
 	private function getBrightcoveWeeklyHits()
 	{
+		$brightcovetoken = htmlspecialchars($this->params->get('brightcovetoken'));
+		$serviceUrl      = 'http://api.brightcove.com/services/library';
+
 		foreach ($this->getVideoIds() as $id => $videoId)
 		{
-			$brightcovetoken = htmlspecialchars($this->params->get('brightcovetoken'));
-
-			$serviceUrl = 'http://api.brightcove.com/services/library';
-
 			$parameters = array(
 				'command'      => 'find_video_by_id',
 				'video_id'     => $videoId,
@@ -121,34 +120,41 @@ class plgSystemVideohitsweekly extends JPlugin
 				'token'        => $brightcovetoken
 			);
 
-			$query = http_build_query($parameters);
-
-			//open connection
-			$curl = curl_init();
-
-			// Make a POST request to get bearer token
-			curl_setopt_array($curl, Array(
+			$curlOptions = array(
 				CURLOPT_URL            => $serviceUrl,
-				CURLOPT_POSTFIELDS     => $query,
+				CURLOPT_POSTFIELDS     => http_build_query($parameters),
 				CURLOPT_RETURNTRANSFER => 1,
 				CURLOPT_HEADER         => 0
-			));
+			);
 
-			//execute post
-			$response = curl_exec($curl);
-			$response = json_decode($response);
-
-			//close connection
-			curl_close($curl);
+			$response = $this->makeRequest($curlOptions);
 
 			$this->insertHit($id, $response->playsTrailingWeek);
 		}
+	}
+
+	private function makeRequest($curlOpt)
+	{
+		//open connection
+		$curl = curl_init();
+
+		// Make a POST request to get bearer token
+		curl_setopt_array($curl, $curlOpt);
+
+		//execute post
+		$response = curl_exec($curl);
+
+		//close connection
+		curl_close($curl);
+
+		return json_decode($response);
 	}
 
 	private function getYoutubeWeeklyHits()
 	{
 		$this->accessToken = JPATH_SITE . '/cache/plg_googleoauth/access.token';
 		$youtubeChannel    = htmlspecialchars($this->params->get('youtubeChannel'));
+		$url               = 'https://www.googleapis.com/youtube/analytics/v1/reports?';
 
 		// Fetch plg_googeoauth parameters via database query
 		$this->db = JFactory::getDBO();
@@ -177,18 +183,13 @@ class plgSystemVideohitsweekly extends JPlugin
 					'key'        => $this->googleApiKey
 				);
 
-				$url   = 'https://www.googleapis.com/youtube/analytics/v1/reports?';
-				$query = http_build_query($parameters);
-				$curl  = curl_init();
-
-				curl_setopt_array($curl, Array(
+				$curlOptions = array(
 					CURLOPT_HTTPHEADER     => array('Authorization:  Bearer ' . file_get_contents($this->accessToken)),
-					CURLOPT_URL            => $url . $query,
+					CURLOPT_URL            => $url . http_build_query($parameters),
 					CURLOPT_RETURNTRANSFER => 1
-				));
+				);
 
-				$response = curl_exec($curl);
-				$response = json_decode($response);
+				$response = $this->makeRequest($curlOptions);
 
 				$this->insertHit($id, $response->rows[0][0]);
 
