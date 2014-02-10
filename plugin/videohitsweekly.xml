@@ -70,18 +70,18 @@
 		       description="PLG_VIDEO_HITS_WEEKLY_VIDEO_ID_DESC" />
 		<param name="youtube"
 		       type="radio"
-		       default="0"
+		       default=""
 		       label="PLG_VIDEO_HITS_WEEKLY_YOUTUBE_LABEL"
 		       description="PLG_VIDEO_HITS_WEEKLY_YOUTUBE_DESC">
-			<option value="0">No</option>
+			<option value="">No</option>
 			<option value="1">Yes</option>
 		</param>
 		<param name="brightcove"
 		       type="radio"
-		       default="0"
+		       default=""
 		       label="PLG_VIDEO_HITS_WEEKLY_BRIGHTCOVE_LABEL"
 		       description="PLG_VIDEO_HITS_WEEKLY_BRIGHTCOVE_DESC">
-			<option value="0">No</option>
+			<option value="">No</option>
 			<option value="1">Yes</option>
 		</param>
 		<param name="brightcovetoken"

@@ -19,31 +19,36 @@ class plgSystemVideohitsweekly extends JPlugin
 	{
 		parent::__construct($subject, $config);
 
-		$this->app      = JFactory::getApplication();
-		$this->db       = JFactory::getDBO();
-		$this->plugin   =& JPluginHelper::getPlugin('system', 'videohitsweekly');
-		$this->params   = new JParameter($this->plugin->params);
-		$this->interval = (int) ($this->params->get('interval', 5) * 60);
+		$this->app = JFactory::getApplication();
+		$this->db  = JFactory::getDBO();
 	}
 
 	function onAfterRoute()
 	{
 		if ($this->app->isSite())
 		{
-			$now  = JFactory::getDate()->toUnix();
-			$last = $this->params->get('last_run');
+			$now      = JFactory::getDate()->toUnix();
+			$interval = (int) ($this->params->get('interval', 5) * 60);
+			$last     = $this->params->get('last_run');
 
-			if (($now - $last) > $this->interval)
+			if (($now - $last) > $interval)
 			{
-				$this->createTable();
 				$this->updateLastRun($now);
-				//$this->getBrightcoveWeeklyHits();
-				$this->getYoutubeWeeklyHits();
 
+				if ($this->params->get('brightcove'))
+				{
+					$this->getBrightcoveWeeklyHits();
+				}
+				if ($this->params->get('youtube'))
+				{
+					$this->getYoutubeWeeklyHits();
+				}
 			}
+
+			return;
 		}
 
-		return false;
+		$this->createTable();
 	}
 
 	/**
