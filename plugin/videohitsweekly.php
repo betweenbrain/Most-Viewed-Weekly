@@ -170,9 +170,9 @@ class plgSystemVideohitsweekly extends JPlugin
 			$this->{$name} = $value;
 		}
 
-		foreach ($this->getVideoIds('youtube') as $id => $videoId)
+		if (file_exists($this->accessToken))
 		{
-			if (file_exists($this->accessToken))
+			foreach ($this->getVideoIds('youtube') as $id => $videoId)
 			{
 				$parameters = array(
 					'ids'        => 'channel==' . $youtubeChannel,
