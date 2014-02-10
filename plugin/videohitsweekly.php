@@ -14,8 +14,6 @@ jimport('joomla.html.parameter');
 
 class plgSystemVideohitsweekly extends JPlugin
 {
-	// Hardcoded minimum of 5 minutes
-	protected $interval = 300;
 
 	public function __construct(&$subject, $config)
 	{
@@ -26,12 +24,6 @@ class plgSystemVideohitsweekly extends JPlugin
 		$this->plugin   =& JPluginHelper::getPlugin('system', 'videohitsweekly');
 		$this->params   = new JParameter($this->plugin->params);
 		$this->interval = (int) ($this->params->get('interval', 5) * 60);
-
-		// correct value if value is under the minimum
-		if ($this->interval < 300)
-		{
-			$this->interval = 300;
-		}
 	}
 
 	function onAfterRoute()
