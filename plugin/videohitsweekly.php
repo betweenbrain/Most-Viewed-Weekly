@@ -43,7 +43,7 @@ class plgSystemVideohitsweekly extends JPlugin
 				$params             = parse_ini_string($this->db->loadResult());
 				$params['last_run'] = $now;
 				$paramsIni          = null;
-				
+
 				foreach ($params as $key => $value)
 				{
 					$paramsIni .= $key . '=' . $value . "\n";
@@ -52,9 +52,7 @@ class plgSystemVideohitsweekly extends JPlugin
 				// Update plugin parameters in database
 				$query = 'UPDATE #__plugins' .
 					' SET params=' . $this->db->Quote($paramsIni) .
-					' WHERE element = ' . $this->db->Quote('videohitsweekly') .
-					' AND folder = ' . $this->db->Quote('system') .
-					' AND published >= 1';
+					' WHERE element = ' . $this->db->Quote('videohitsweekly') . '';
 				$this->db->setQuery($query);
 				$this->db->query();
 
