@@ -28,8 +28,6 @@ class plgSystemVideohitsweekly extends JPlugin
 
 	function onAfterRoute()
 	{
-		$this->app = JFactory::getApplication();
-
 		if ($this->app->isSite())
 		{
 			$now  = JFactory::getDate()->toUnix();
@@ -37,8 +35,6 @@ class plgSystemVideohitsweekly extends JPlugin
 
 			if ($now - $last > $this->interval)
 			{
-				$this->db = JFactory::getDbo();
-
 				// Retrieve saved parameters from database
 				$query = ' SELECT params' .
 					' FROM #__plugins' .
