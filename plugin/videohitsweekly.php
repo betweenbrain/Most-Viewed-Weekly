@@ -35,28 +35,8 @@ class plgSystemVideohitsweekly extends JPlugin
 
 			if (($now - $last) > $this->interval)
 			{
-				// Retrieve saved parameters from database
-				$query = ' SELECT params' .
-					' FROM #__plugins' .
-					' WHERE element = ' . $this->db->Quote('videohitsweekly') . '';
-				$this->db->setQuery($query);
-				$params             = parse_ini_string($this->db->loadResult());
-				$params['last_run'] = $now;
-				$paramsIni          = null;
-
-				foreach ($params as $key => $value)
-				{
-					$paramsIni .= $key . '=' . $value . "\n";
-				}
-
-				// Update plugin parameters in database
-				$query = 'UPDATE #__plugins' .
-					' SET params=' . $this->db->Quote($paramsIni) .
-					' WHERE element = ' . $this->db->Quote('videohitsweekly') . '';
-				$this->db->setQuery($query);
-				$this->db->query();
-
 				$this->createTable();
+				$this->updateLastRun($now);
 				//$this->getBrightcoveWeeklyHits();
 				$this->getYoutubeWeeklyHits();
 
@@ -64,6 +44,34 @@ class plgSystemVideohitsweekly extends JPlugin
 		}
 
 		return false;
+	}
+
+	/**
+	 * Updates the last_run parameter stored for this plugin
+	 *
+	 * @param $now
+	 */
+	private function updateLastRun($now)
+	{
+		$query = ' SELECT params' .
+			' FROM #__plugins' .
+			' WHERE element = ' . $this->db->Quote('videohitsweekly') . '';
+		$this->db->setQuery($query);
+
+		$params             = parse_ini_string($this->db->loadResult());
+		$params['last_run'] = $now;
+		$paramsIni          = null;
+
+		foreach ($params as $key => $value)
+		{
+			$paramsIni .= $key . '=' . $value . "\n";
+		}
+
+		$query = 'UPDATE #__plugins' .
+			' SET params=' . $this->db->Quote($paramsIni) .
+			' WHERE element = ' . $this->db->Quote('videohitsweekly') . '';
+		$this->db->setQuery($query);
+		$this->db->query();
 	}
 
 	private function createTable()
