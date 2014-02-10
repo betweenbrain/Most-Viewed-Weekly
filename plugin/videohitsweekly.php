@@ -40,19 +40,12 @@ class plgSystemVideohitsweekly extends JPlugin
 
 		if ($this->app->isSite())
 		{
-			$now  = JFactory::getDate();
-			$now  = $now->toUnix();
+			$now  = JFactory::getDate()->toUnix();
 			$last = $this->params->get('last_run');
-			$diff = $now - $last;
 
-			if ($diff > $this->interval)
+			if ($now - $last > $this->interval)
 			{
-
-				$version = new JVersion();
-				define('J_VERSION', $version->getShortVersion());
-				jimport('joomla.registry.format');
 				$this->db = JFactory::getDbo();
-				$this->params->set('last_run', $now);
 
 				// Retrieve saved parameters from database
 				$query = ' SELECT params' .
@@ -60,21 +53,19 @@ class plgSystemVideohitsweekly extends JPlugin
 					' WHERE element = ' . $this->db->Quote('videohitsweekly') . '';
 				$this->db->setQuery($query);
 				$params = $this->db->loadResult();
-				// Check if last_run parameter has been previously saved.
-				if (preg_match('/last_run=/', $params))
+
+				$params             = parse_ini_string($params);
+				$params['last_run'] = $now;
+
+				$paramsIni = null;
+				foreach ($params as $key => $value)
 				{
-					// If it has been, update it.
-					$params = preg_replace('/last_run=([0-9]*)/', 'last_run=' . $now, $params);
+					$paramsIni .= $key . '=' . $value . "\n";
 				}
-				else
-				{
-					// Add last_run parameter to databse if it has not been recored before.
-					// TODO: Currently adding last_run to beginning of param string due to extra "\n" when using $params .=
-					$params = 'last_run=' . $now . "\n" . $params;
-				}
+
 				// Update plugin parameters in database
 				$query = 'UPDATE #__plugins' .
-					' SET params=' . $this->db->Quote($params) .
+					' SET params=' . $this->db->Quote($paramsIni) .
 					' WHERE element = ' . $this->db->Quote('videohitsweekly') .
 					' AND folder = ' . $this->db->Quote('system') .
 					' AND published >= 1';
@@ -82,7 +73,7 @@ class plgSystemVideohitsweekly extends JPlugin
 				$this->db->query();
 
 				$this->createTable();
-				$this->getBrightcoveWeeklyHits();
+				//$this->getBrightcoveWeeklyHits();
 				$this->getYoutubeWeeklyHits();
 
 			}
