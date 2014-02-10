@@ -17,9 +17,9 @@ class plgSystemVideohitsweekly extends JPlugin
 	// Hardcoded minimum of 5 minutes
 	protected $interval = 300;
 
-	function plgSystemPseudocron(&$subject, $params)
+	public function __construct(&$subject, $config)
 	{
-		parent::__construct($subject, $params);
+		parent::__construct($subject, $config);
 
 		$this->app      = JFactory::getApplication();
 		$this->db       = JFactory::getDBO();
