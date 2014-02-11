@@ -24,14 +24,28 @@ class modMostviewedweeklyHelper
 	{
 		$limit = $this->params->get('limit');
 
-		$query = 'SELECT k2.id as id, k2.title as title, k2.alias as alias, k2.catid as catid, k2.plugins as plugins, weekly.hits as hits ' .
-			' FROM ' . $this->db->nameQuote('#__k2_items') . ' as k2' .
-			' LEFT JOIN ' . $this->db->nameQuote('#__weekly_hits') . ' as weekly' .
-			' ON weekly.itemId = k2.id' .
-			' WHERE k2.published = 1' .
-			' AND k2.trash = 0' .
-			' ORDER BY hits DESC' .
-			' LIMIT ' . $limit;
+		switch ($this->params->get('criteria'))
+		{
+			case('weekly'):
+				$query = 'SELECT k2.id as id, k2.title as title, k2.alias as alias, k2.catid as catid, k2.plugins as plugins, weekly.hits as hits ' .
+					' FROM ' . $this->db->nameQuote('#__k2_items') . ' as k2' .
+					' LEFT JOIN ' . $this->db->nameQuote('#__weekly_hits') . ' as weekly' .
+					' ON weekly.itemId = k2.id' .
+					' WHERE k2.published = 1' .
+					' AND k2.trash = 0' .
+					' ORDER BY hits DESC' .
+					' LIMIT ' . $limit;
+				break;
+
+			case('forever'):
+				$query = 'SELECT id, title, alias, catid, plugins, hits' .
+					' FROM ' . $this->db->nameQuote('#__k2_items') .
+					' WHERE published = 1' .
+					' AND trash = 0' .
+					' ORDER BY hits DESC' .
+					' LIMIT ' . $limit;
+				break;
+		}
 
 		$this->db->setQuery($query);
 		$items = $this->db->loadObjectList();

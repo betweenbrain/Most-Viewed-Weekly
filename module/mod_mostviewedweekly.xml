@@ -35,6 +35,14 @@
 			<option value="33">33</option>
 			<option value="39">39</option>
 		</param>
+		<param name="criteria"
+		       type="list"
+		       default="weekly"
+		       label="MOD_MOST_VIEWED_WEEKLY_CRITERIA_LABEL"
+		       description="MOD_MOST_VIEWED_WEEKLY_CRITERIA_DESC">
+			<option value="weekly">MOD_MOST_VIEWED_WEEKLY_CRITERIA_WEEKLY</option>
+			<option value="forever">MOD_MOST_VIEWED_WEEKLY_CRITERIA_ALL_TIME</option>
+		</param>
 	</params>
 
 </install>
