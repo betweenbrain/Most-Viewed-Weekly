@@ -11,10 +11,23 @@
 
 include_once(JPATH_SITE . '/components/com_k2/helpers/route.php');
 
+$options = array('weekly' => 'Weekly', 'forever' => 'All TIme');
+$criteria = JRequest::getVar('hits');
+
 if (count($items)): ?>
 	<div id="looper<?php echo $module->id; ?>" data-looper="go" data-interval="false" class="looper side slide featured video-slider<?php echo $moduleclass_sfx ?>">
 		<?php if (count($items) > 3) : ?>
 			<div class="nav">
+				<form action="" method="post">
+					<select name="hits" onchange="this.form.submit()">
+						<?php foreach ($options as $value => $text) : ?>
+							<option value="<?php echo $value ?>" <?php if ($criteria === $value)
+							{
+								echo 'selected="selected"';
+							} ?>><?php echo $text ?></option>
+						<?php endforeach ?>
+					</select>
+				</form>
 				<a data-looper="prev" class="prev" href="#looper<?php echo $module->id; ?>">Previous</a>
 				<a data-looper="next" class="next" href="#looper<?php echo $module->id; ?>">Next</a>
 			</div>

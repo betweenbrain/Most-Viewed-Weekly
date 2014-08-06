@@ -24,7 +24,7 @@ class modMostviewedweeklyHelper
 	{
 		$limit = $this->params->get('limit');
 
-		switch ($this->params->get('criteria'))
+		switch ($criteria = JRequest::getVar('hits', 'weekly'))
 		{
 			case('weekly'):
 				$query = 'SELECT k2.id as id, k2.title as title, k2.alias as alias, k2.catid as catid, k2.plugins as plugins, weekly.hits as hits ' .
