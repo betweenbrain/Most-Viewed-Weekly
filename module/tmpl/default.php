@@ -45,7 +45,7 @@ if (count($items)): ?>
 			 * Parse K2 plugins data for each field
 			 */
 			$plugins = parse_ini_string($item->plugins);
-			$item->videoImage = $plugins['video_datavideoImageUrl'];
+			$item->videoImage = $plugins['universal_fieldsitemImage'];
 			$item->videoDuration = $plugins['video_datavideoDuration'];
 			?>
 			<?php
